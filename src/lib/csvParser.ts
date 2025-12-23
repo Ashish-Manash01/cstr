@@ -4,66 +4,122 @@ export interface Member {
   linkedIn?: string
   profileImage?: string
   email?: string
-  category?: string
+  category?: MemberCategory
 }
 
-export type MemberCategory = 'Faculty' | 'Core Team' | 'Technical Team' | 'Events Team'
+export type MemberCategory =
+  | 'Faculty'
+  | 'Core Team'
+  | 'Technical Team'
+  | 'Website Team'
+  | 'Executive Team'
+  | 'Events Team'
 
 export interface CategorizedMembers {
   [key: string]: Member[]
 }
 
+/* =========================================================
+   MANUAL TEAM OVERRIDES (HIGHEST PRIORITY)
+   ========================================================= */
+
+const MANUAL_TEAM_MAP: Record<string, MemberCategory> = {
+  // Core Team
+  'nishant patil': 'Core Team',
+  'janumpally sushanth reddy': 'Core Team',
+  'rashmi k. murthy': 'Core Team',
+
+  // Technical Team
+  'harsh pratap singh': 'Technical Team',
+  'aditya kumar': 'Technical Team',
+  'akanksha sagar kulkarni': 'Technical Team',
+
+  // Website Team
+  'ashish manash': 'Website Team',
+  'bendi hema swaroop': 'Website Team',
+  'm lakshmi padmavathi': 'Website Team',
+
+  // Executive Team
+  'neha ojha sikhwal': 'Executive Team',
+  'b sai eswar': 'Executive Team',
+  'gowtham b m': 'Executive Team'
+}
+
+/* =========================================================
+   CSV PARSER
+   ========================================================= */
+
 export async function parseCSV(): Promise<Member[]> {
   try {
     const response = await fetch('/2.csv')
     const csvText = await response.text()
-    
+
     const lines = csvText.split('\n')
     if (lines.length < 2) return []
-    
-    // Parse header
-    const headers = lines[0].split(',').map(h => h.trim())
-    const nameIndex = headers.findIndex(h => h.toLowerCase().includes('name'))
-    const photoIndex = headers.findIndex(h => h.toLowerCase().includes('photograph'))
-    const linkedInIndex = headers.findIndex(h => h.toLowerCase().includes('linked'))
-    const postIndex = headers.findIndex(h => h.toLowerCase().includes('post'))
-    const emailIndex = headers.findIndex(h => h.toLowerCase().includes('gmail'))
-    
+
+    // Remove BOM + normalize headers
+    const headers = lines[0]
+      .replace(/\uFEFF/g, '')
+      .split(',')
+      .map(h => h.trim().toLowerCase())
+
+    const nameIndex = headers.findIndex(h => h.includes('name'))
+    const photoIndex = headers.findIndex(h => h.includes('image'))
+    const linkedInIndex = headers.findIndex(h => h.includes('linkedin'))
+    const emailIndex = headers.findIndex(h => h.includes('email'))
+    const roleIndex = headers.findIndex(h => h.includes('role'))
+
     const members: Member[] = []
-    
-    // Parse data rows
+
     for (let i = 1; i < lines.length; i++) {
       const line = lines[i].trim()
       if (!line) continue
-      
+
       const values = parseCSVLine(line)
-      
-      let name = values[nameIndex]?.trim()
-      const photoUrl = values[photoIndex]?.trim()
-      let linkedInUrl = values[linkedInIndex]?.trim()
-      const role = values[postIndex]?.trim()
-      const email = values[emailIndex]?.trim()
 
-      if (name) {
-        // Clean name - remove newlines and extra whitespace
-        name = name.replace(/\n/g, '').replace(/\s+/g, ' ').trim()
+      const name = values[nameIndex]
+        ?.replace(/\s+/g, ' ')
+        .trim()
 
-        // Clean LinkedIn URL - add https:// if missing and starts with www
-        if (linkedInUrl && linkedInUrl.startsWith('www')) {
-          linkedInUrl = 'https://' + linkedInUrl
-        }
+      if (!name) continue
 
-        members.push({
-          name,
-          role: role || 'Member',
-          linkedIn: linkedInUrl && isValidUrl(linkedInUrl) ? linkedInUrl : undefined,
-          profileImage: photoUrl && isValidImageUrl(photoUrl) ? photoUrl : undefined,
-          email: email && email !== 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7' ? email : undefined,
-          category: categorizeRole(role)
-        })
-      }
+      const rawRole = values[roleIndex]
+        ?.replace(/\n/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim()
+
+      const role = rawRole && rawRole.length > 0 ? rawRole : 'Member'
+
+      const linkedInRaw = values[linkedInIndex]?.trim()
+      const linkedIn =
+        linkedInRaw && linkedInRaw.startsWith('http')
+          ? linkedInRaw
+          : undefined
+
+      const photoRaw = values[photoIndex]?.trim()
+      const profileImage =
+        photoRaw && isValidImageUrl(photoRaw)
+          ? photoRaw
+          : undefined
+
+      const emailRaw = values[emailIndex]?.trim()
+      const email =
+        emailRaw && emailRaw.includes('@')
+          ? emailRaw
+          : undefined
+
+      const category = categorizeRole(role, name)
+
+      members.push({
+        name,
+        role,
+        linkedIn,
+        profileImage,
+        email,
+        category
+      })
     }
-    
+
     return members
   } catch (error) {
     console.error('Error parsing CSV:', error)
@@ -71,15 +127,19 @@ export async function parseCSV(): Promise<Member[]> {
   }
 }
 
+/* =========================================================
+   HELPERS
+   ========================================================= */
+
 function parseCSVLine(line: string): string[] {
   const result: string[] = []
   let current = ''
   let insideQuotes = false
-  
+
   for (let i = 0; i < line.length; i++) {
     const char = line[i]
     const nextChar = line[i + 1]
-    
+
     if (char === '"') {
       if (insideQuotes && nextChar === '"') {
         current += '"'
@@ -94,15 +154,15 @@ function parseCSVLine(line: string): string[] {
       current += char
     }
   }
-  
+
   result.push(current)
   return result
 }
 
 function isValidUrl(url: string): boolean {
   try {
-    const urlObj = new URL(url)
-    return urlObj.protocol === 'http:' || urlObj.protocol === 'https:'
+    const u = new URL(url)
+    return u.protocol === 'http:' || u.protocol === 'https:'
   } catch {
     return false
   }
@@ -110,47 +170,73 @@ function isValidUrl(url: string): boolean {
 
 function isValidImageUrl(url: string): boolean {
   if (!url) return false
-  if (url.startsWith('data:image/gif;base64')) return false
+  if (url.startsWith('data:image')) return false
   if (url.includes('drive.google.com')) return false
   return isValidUrl(url)
 }
 
-function categorizeRole(role: string): MemberCategory {
-  const roleLower = role?.toLowerCase() || ''
-  
+/* =========================================================
+   CATEGORY LOGIC
+   ========================================================= */
+
+function categorizeRole(role: string, name?: string): MemberCategory {
+  const cleanName = name?.toLowerCase().trim() || ''
+
+  // 🔥 MANUAL OVERRIDE (HIGHEST PRIORITY)
+  if (cleanName && MANUAL_TEAM_MAP[cleanName]) {
+    return MANUAL_TEAM_MAP[cleanName]
+  }
+
+  const r = role.toLowerCase().replace(/\s+/g, ' ').trim()
+
   // Faculty
-  if (roleLower.includes('faculty') || roleLower.includes('head of department') || roleLower.includes('professor')) {
+  if (
+    r.includes('faculty') ||
+    r.includes('advisor') ||
+    r.includes('professor') ||
+    r.includes('head of department') ||
+    r.includes('hod')
+  ) {
     return 'Faculty'
   }
-  
-  // Core Team (Leadership) - Convener, Executive, Co-
-  if (roleLower.includes('convener') || roleLower.includes('executive')) {
+
+  // Core Team (fallback)
+  if (r.includes('convener') || r.includes('executive')) {
     return 'Core Team'
   }
-  
-  // Technical Team
-  if (roleLower.includes('technical') || roleLower.includes('backend') || roleLower.includes('website')) {
+
+  // Technical Team (fallback)
+  if (
+    r.includes('technical') ||
+    r.includes('backend') ||
+    r.includes('website') ||
+    r.includes('web')
+  ) {
     return 'Technical Team'
   }
-  
-  // Events Team / General (everything else)
+
   return 'Events Team'
 }
 
-export function categorizeMembersData(members: Member[]): CategorizedMembers {
+/* =========================================================
+   GROUPING FOR UI
+   ========================================================= */
+
+export function categorizeMembersData(
+  members: Member[]
+): CategorizedMembers {
   const categorized: CategorizedMembers = {
-    'Faculty': [],
+    Faculty: [],
     'Core Team': [],
     'Technical Team': [],
+    'Website Team': [],
+    'Executive Team': [],
     'Events Team': []
   }
-  
+
   members.forEach(member => {
-    const category = member.category || 'Events Team'
-    if (category in categorized) {
-      categorized[category].push(member)
-    }
+    categorized[member.category || 'Events Team'].push(member)
   })
-  
+
   return categorized
 }
