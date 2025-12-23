@@ -40,9 +40,11 @@ const MANUAL_TEAM_MAP: Record<string, MemberCategory> = {
   'm lakshmi padmavathi': 'Website Team',
 
   // Executive Team
+    // Executive Team
   'neha ojha sikhwal': 'Executive Team',
   'b sai eswar': 'Executive Team',
-  'gowtham b m': 'Executive Team'
+  'gowtham b m': 'Executive Team',
+  'tejas s': 'Executive Team'
 }
 
 /* =========================================================
