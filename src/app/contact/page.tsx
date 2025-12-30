@@ -136,10 +136,11 @@ export default function Contact() {
 
                 <button
                   type="submit"
-                  className="w-full bg-gradient-to-r from-primary to-secondary dark:from-blue-600 dark:to-yellow-600 text-white font-bold py-3 rounded-lg hover:shadow-lg transform hover:scale-105 transition duration-300"
+                  className="w-full py-3 rounded-lg font-semibold bg-green-50 dark:bg-green-900/20 text-green-900 dark:text-green-100 border border-green-400 hover:shadow-lg hover:bg-green-100 dark:hover:bg-green-900/40 transition"
                 >
                   Send Message
                 </button>
+
               </form>
             </div>
 

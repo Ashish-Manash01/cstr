@@ -105,22 +105,24 @@ export default function MembersPage() {
                         className="group bg-white dark:bg-slate-800 rounded-xl shadow-lg hover:shadow-2xl transition transform hover:scale-105 overflow-hidden border border-gray-200 dark:border-slate-700"
                       >
                         {/* Image */}
-                        <div className="h-64 overflow-hidden bg-gradient-to-br from-gray-200 to-gray-300 dark:from-slate-700 dark:to-slate-600">
+                        <div className="h-64 flex items-center justify-center bg-gray-100 dark:bg-slate-700">
                           {member.profileImage ? (
                             <img
                               src={member.profileImage}
                               alt={member.name}
-                              className="w-full h-full object-cover object-center"
+                              className="w-56 h-56 rounded-xl object-contain bg-white shadow-sm"
                               onError={(e) => {
                                 ;(e.target as HTMLImageElement).src = '/avatar.png'
                               }}
                             />
                           ) : (
-                            <div className="w-full h-full flex items-center justify-center text-5xl font-bold text-primary bg-gradient-to-br from-primary/10 to-secondary/10">
+                           <div className="w-56 h-56 rounded-xl bg-white flex items-center justify-center text-4xl font-bold text-primary shadow-sm">
                               {member.name.charAt(0).toUpperCase()}
                             </div>
                           )}
                         </div>
+
+                        
 
                         {/* Info */}
                         <div className="p-5">
