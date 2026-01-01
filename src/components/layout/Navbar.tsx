@@ -34,7 +34,7 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex justify-between items-center h-16">
           <Link href="/" className="flex items-center space-x-2">
-            <img src="https://media.licdn.com/dms/image/v2/D560BAQGWGQldY51hLg/company-logo_200_200/B56ZsDfr4cIcAI-/0/1765290197202/cstr_nitk_logo?e=1767225600&v=beta&t=imMVUeR4RLYRdDIEwmGKyq6lg8uozdjkcOsQKzCeONw" alt="CSTR Logo" className="h-10 w-10 object-contain" />
+            <img src="/android-chrome-512x512.png" alt="CSTR Logo" className="h-12 w-12 object-contain" />
             <span className="font-bold text-lg">CSTR</span>
           </Link>
 
@@ -45,6 +45,7 @@ export default function Navbar() {
             <Link href="/events" className="hover:text-primary transition">Events</Link>
             <Link href="/members" className="hover:text-primary transition">Members</Link>
             <Link href="/contact" className="hover:text-primary transition">Contact</Link>
+            <Link href="/support" className="hover:text-primary transition font-semibold">Support</Link>
           </div>
 
           {/* Theme Toggle & Auth Buttons */}

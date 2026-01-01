@@ -26,29 +26,34 @@ export default function Contact() {
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
-    setError('')
+  e.preventDefault();
+  setLoading(true);
+  setError("");
 
-    try {
-      // Send message to backend
-      const response = await api.post('/messages', formData)
-      
-      if (response.data.success) {
-        setSubmitted(true)
-        setFormData({ name: '', email: '', subject: '', message: '' })
-        
-        // Hide success message after 3 seconds
-        setTimeout(() => {
-          setSubmitted(false)
-        }, 3000)
-      }
-    } catch (err: any) {
-      setError(err.response?.data?.error || 'Failed to send message. Please try again.')
-    } finally {
-      setLoading(false)
+  try {
+    const res = await fetch("/api/contact", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData)
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+      setSubmitted(true);
+      setFormData({ name: "", email: "", subject: "", message: "" });
+
+      setTimeout(() => setSubmitted(false), 3000);
+    } else {
+      setError("Failed to send message.");
     }
+  } catch (err) {
+    setError("Something went wrong. Please try again.");
+  } finally {
+    setLoading(false);
   }
+};
+
 
   return (
     <main className="min-h-screen bg-white dark:bg-slate-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">

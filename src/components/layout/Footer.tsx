@@ -12,10 +12,7 @@ export default function Footer() {
           <div>
             <div className="flex items-center space-x-3 mb-4">
               <img
-                src="https://media.licdn.com/dms/image/v2/D560BAQGWGQldY51hLg/company-logo_200_200/B56ZsDfr4cIcAI-/0/1765290197202/cstr_nitk_logo?e=1767225600&v=beta&t=imMVUeR4RLYRdDIEwmGKyq6lg8uozdjkcOsQKzCeONw"
-                alt="CSTR Logo"
-                className="h-12 w-12 object-contain"
-              />
+                src="/android-chrome-512x512.png" alt="CSTR Logo" className="h-12 w-12 object-contain" />
               <h3 className="text-white font-bold text-lg">CSTR</h3>
             </div>
 

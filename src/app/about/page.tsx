@@ -1,6 +1,8 @@
 'use client'
 
 import { useTheme } from '@/lib/theme-provider'
+import Link from "next/link"
+
 
 export default function About() {
   const { theme } = useTheme()
@@ -122,9 +124,12 @@ export default function About() {
           <p className="text-xl mb-8 opacity-90">
             Be part of a vibrant community of innovators, researchers, and industry professionals.
           </p>
-          <button className="bg-white dark:bg-slate-900 text-primary dark:text-secondary px-8 py-3 rounded-lg font-bold hover:shadow-lg transform hover:scale-105 transition">
+          <Link
+            href="/support"
+            className="inline-block bg-white dark:bg-slate-900 text-primary dark:text-secondary px-8 py-3 rounded-lg font-bold hover:shadow-lg transform hover:scale-105 transition"
+          > 
             Become a Member
-          </button>
+          </Link>
         </div>
       </section>
     </main>
