@@ -1,14 +1,20 @@
-'use client'
+"use client"
 
 import { useEffect, useState } from "react"
+import { motion } from "framer-motion"
 import Link from "next/link"
 
 export default function Home() {
-
-  const fullText =
-    "Chemical Engineering Forum for Science Technology & Research"
-
+  const fullText = "Chemical Engineering Forum for Science Technology & Research"
   const [text, setText] = useState("")
+
+  // Image Carousel State
+  const [index, setIndex] = useState(0)
+  const aboutImages = [
+    "/department.webp",
+    "/faculty.webp",
+    "/research-lab.webp"
+  ]
 
   useEffect(() => {
     let i = 0
@@ -21,186 +27,194 @@ export default function Home() {
     return () => clearInterval(typing)
   }, [])
 
+  const nextImage = () =>
+    setIndex((prev) => (prev + 1) % aboutImages.length)
+
+  const prevImage = () =>
+    setIndex((prev) => (prev - 1 + aboutImages.length) % aboutImages.length)
+
   return (
     <main className="min-h-screen bg-white dark:bg-slate-950">
 
-      {/* HERO */}
-      <section className="relative py-32 text-white overflow-hidden">
+      {/* HERO SECTION */}
+      <section className="relative min-h-screen hero-rings flex items-center justify-center bg-white dark:bg-slate-950 text-center overflow-hidden">
+        <div className="max-w-4xl mx-auto px-4 z-10">
 
-        {/* Background image moved downward */}
-        <div className="absolute inset-0">
-          <img
-            src="https://media.licdn.com/dms/image/v2/D5622AQFbxfaFchHcxA/feedshare-shrink_2048_1536/B56Zjko2ZhHkAw-/0/1756182951326?e=1769040000&v=beta&t=-OGPhLKey0fUm4CYmoCs3Qe8b9VPFIR8HXC2FQoOTSY"
-            alt="CSTR Background"
-            className="w-full h-full object-cover object-[center_70%]"
-          />
-
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-900/85 via-blue-800/70 to-blue-700/60" />
-        </div>
-
-        <div className="relative max-w-7xl mx-auto px-4">
-
-          <div className="mb-4">
-            <p className="text-sm font-semibold mb-2">
-              National Institute of Technology Karnataka (NITK)
-            </p>
-
-            <p className="text-sm mb-4">
-              Department of Chemical Engineering
-            </p>
+          <div className="mx-auto mb-10 w-56 h-56 md:w-64 md:h-64 rounded-full bg-white dark:bg-slate-900 border border-blue-400/40 dark:border-blue-500/40 flex items-center justify-center logo-glow shadow-2xl">
+            <img
+              src="/apple-touch-icon.png"
+              alt="CSTR Logo"
+              className="w-36 h-36 md:w-40 md:h-40 object-contain drop-shadow-lg"
+            />
           </div>
 
-          <h1 className="text-6xl font-bold mb-4">CSTR</h1>
-
-          <h2 className="text-3xl font-semibold mb-6">
+          <h2 className="text-2xl md:text-3xl font-semibold text-slate-800 dark:text-blue-200 leading-relaxed min-h-[4rem]">
             {text}
-            <span className="animate-pulse">|</span>
+            <span className="animate-pulse border-r-2 border-blue-500 ml-1"></span>
+          </h2>
+        </div>
+
+        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-b from-transparent to-gray-50 dark:to-slate-900" />
+      </section>
+
+      {/* COMPANIES ROTATION */}
+      <section className="py-16 bg-gray-50 dark:bg-slate-900">
+        <div className="max-w-6xl mx-auto px-6 text-center">
+          <h2 className="text-3xl md:text-4xl font-bold mb-10">
+            <span className="text-slate-800 dark:text-white">
+              Our alumni are currently
+            </span>
+            <span className="text-blue-600 dark:text-blue-400 ml-2 relative after:block after:w-16 after:h-[3px] after:bg-blue-600 dark:after:bg-blue-400 after:mt-2 after:rounded-full inline-block">
+              at
+            </span>
           </h2>
 
-          <p className="text-xl mb-8 max-w-2xl">
-            Igniting the Future of Chemical Engineering at NITK Surathkal
+          <div className="relative w-full overflow-hidden rounded-full border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-950 py-10 shadow-xl">
+            <div className="logo-track flex items-center gap-16 whitespace-nowrap animate-[scroll_18s_linear_infinite]">
+              {[
+                "https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Exxon_Mobil_Logo.svg/2560px-Exxon_Mobil_Logo.svg.png",
+                "https://upload.wikimedia.org/wikipedia/en/thumb/0/0e/Reliance_Industries.svg/1280px-Reliance_Industries.svg.png",
+                "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Bharat_Petroleum_logo.svg/960px-Bharat_Petroleum_logo.svg.png",
+                "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/Hindustan_Petroleum_Logo.svg/960px-Hindustan_Petroleum_Logo.svg.png",
+                "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/AXISBank_Logo.svg/2560px-AXISBank_Logo.svg.png",
+                "https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Chevron_Logo.svg/960px-Chevron_Logo.svg.png",
+                "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Wells_Fargo_Bank.svg/960px-Wells_Fargo_Bank.svg.png",
+                "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Goldman_Sachs_logo.svg/2560px-Goldman_Sachs_logo.svg.png",
+                "https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Amazon_2024.svg/2560px-Amazon_2024.svg.png"
+              ].map((logo, i) => (
+                <img
+                  key={i}
+                  src={logo}
+                  className="h-10 md:h-12 object-contain opacity-80 hover:opacity-100 transition"
+                  alt="Company"
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ABOUT SECTION */}
+      <section className="py-24 bg-gray-50 dark:bg-slate-900">
+        <div className="max-w-7xl mx-auto px-6">
+
+          <h2 className="text-4xl md:text-5xl font-bold text-center mb-3">
+            About Us
+          </h2>
+
+          <div className="w-28 h-[3px] mx-auto bg-gray-900 dark:bg-gray-200 rounded-full mb-8" />
+
+          <p className="text-center text-lg md:text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto mb-14 leading-relaxed">
+            Welcome to the Professional Association for Chemical Engineering at NITK Surathkal.
           </p>
 
-          <Link
-            href="/events"
-            className="bg-yellow-400 dark:bg-yellow-500 text-gray-900 font-bold py-4 px-10 rounded-lg hover:shadow-2xl hover:shadow-yellow-400/60 transition transform hover:scale-110 border-2 border-white/20 hover:border-white/50"
-          >
-            🚀 Get Involved
-          </Link>
-        </div>
-      </section>
+          <div className="grid md:grid-cols-2 gap-10 items-start">
 
-      {/* ABOUT */}
-      <section className="py-16 bg-gray-50 dark:bg-slate-900">
-        <div className="max-w-7xl mx-auto px-4">
-          <h2 className="text-4xl font-bold mb-8 text-center text-primary dark:text-blue-400">
-            About CSTR
-          </h2>
+            {/* Carousel */}
+            <div className="relative w-full h-[420px] md:h-[520px] rounded-2xl overflow-hidden shadow-2xl border border-gray-200 dark:border-slate-700 bg-slate-200">
 
-          <div className="grid md:grid-cols-2 gap-8">
-            <div className="bg-white dark:bg-slate-800 p-8 rounded-xl shadow-lg border-l-4 border-primary">
-              <h3 className="text-2xl font-semibold mb-4 text-primary dark:text-blue-400">
-                🎯 Our Vision
-              </h3>
-              <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                CSTR is a platform dedicated to fostering innovation, research, and professional development
-                in chemical engineering. We bridge the gap between academia and industry, providing our members
-                with opportunities for mentorship, networking, and growth.
-              </p>
+              <img
+                src={aboutImages[index]}
+                className="w-full h-full object-cover transition-all duration-[1800ms] ease-in-out"
+                alt="About CSTR"
+              />
+
+              <button
+                onClick={prevImage}
+                className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 dark:bg-slate-800/80 p-3 rounded-xl shadow hover:scale-105 transition"
+              >
+                ◀
+              </button>
+
+              <button
+                onClick={nextImage}
+                className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 dark:bg-slate-800/80 p-3 rounded-xl shadow hover:scale-105 transition"
+              >
+                ▶
+              </button>
             </div>
 
-            <div className="bg-white dark:bg-slate-800 p-8 rounded-xl shadow-lg border-l-4 border-secondary">
-              <h3 className="text-2xl font-semibold mb-4 text-secondary dark:text-yellow-400">
-                💡 Our Mission
-              </h3>
-              <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                To create an inclusive community where chemical engineers can collaborate, innovate, and
-                contribute to technological advancement.
-              </p>
+            {/* Vision + Mission */}
+            <div className="space-y-8">
+              <div className="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-2xl p-8 shadow-lg">
+                <h3 className="text-2xl font-bold mb-3">Our Vision</h3>
+                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                  CSTR is a platform dedicated to fostering innovation, research, and professional development in chemical engineering. We bridge the gap between academia and industry, providing our members with opportunities for mentorship, networking, and growth.
+                </p>
+              </div>
+
+              <div className="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-2xl p-8 shadow-lg">
+                <h3 className="text-2xl font-bold mb-3">Our Mission</h3>
+                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                  To create an inclusive community where chemical engineers can collaborate, innovate, and contribute to technological advancement.
+                  <br /><br />
+
+                  To foster a vibrant ecosystem of innovation by facilitating industry visits, alumni networking, and collaborative research projects that address real-world challenges.
+                </p>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* WHAT WE OFFER */}
-      <section className="py-16 bg-white dark:bg-slate-950">
-        <div className="max-w-7xl mx-auto px-4">
-          <h2 className="text-4xl font-bold mb-12 text-center text-primary dark:text-blue-400">
-            What We Offer
-          </h2>
+      {/* OUR INITIATIVES */}
+<section className="relative py-24 overflow-hidden bg-white dark:bg-slate-950">
+  <div className="max-w-7xl mx-auto px-6">
 
-          <div className="grid md:grid-cols-4 gap-6">
-            <div className="bg-blue-50 dark:bg-blue-900/30 p-8 rounded-xl border-t-4 border-primary shadow-lg">
-              <div className="text-5xl mb-4">🤝</div>
-              <h3 className="text-xl font-bold mb-3">Mentorship</h3>
-              <p>Connect with industry experts and experienced seniors</p>
-            </div>
+    <h2 className="text-5xl font-bold text-center mb-3">
+      Our Initiatives
+    </h2>
 
-            <div className="bg-yellow-50 dark:bg-yellow-900/30 p-8 rounded-xl border-t-4 border-secondary shadow-lg">
-              <div className="text-5xl mb-4">🎓</div>
-              <h3 className="text-xl font-bold mb-3">Guest Lectures</h3>
-              <p>Learn from renowned professionals in the field</p>
-            </div>
+    <div className="w-24 h-[3px] mx-auto bg-gray-900 dark:bg-gray-100 rounded-full mb-14" />
 
-            <div className="bg-green-50 dark:bg-green-900/30 p-8 rounded-xl border-t-4 border-accent shadow-lg">
-              <div className="text-5xl mb-4">🔬</div>
-              <h3 className="text-xl font-bold mb-3">Research Projects</h3>
-              <p>Collaborate on cutting-edge research initiatives</p>
-            </div>
+    <div className="grid md:grid-cols-2 gap-10">
 
-            <div className="bg-purple-50 dark:bg-purple-900/30 p-8 rounded-xl border-t-4 border-purple-600 shadow-lg">
-              <div className="text-5xl mb-4">🌐</div>
-              <h3 className="text-xl font-bold mb-3">Networking</h3>
-              <p>Build connections with peers and professionals</p>
-            </div>
-          </div>
-        </div>
-      </section>
+      {[
+        {
+          title: "Workshops & Talks",
+          link: "/initiatives/workshops",
+          text:
+            "Interactive technical talks, software training and learning sessions guided by faculty and seniors."
+        },
+        {
+          title: "Research Assistance",
+          link: "/initiatives/research",
+          text:
+            "Support with research topics, paper writing, simulations, data interpretation and publication guidance."
+        },
+        {
+          title: "Industry Interactions",
+          link: "/initiatives/industry",
+          text:
+            "Sessions with professionals, alumni panels and exposure to real-world industrial practices."
+        },
+        {
+          title: "Student Projects",
+          link: "/initiatives/projects",
+          text:
+            "Guided mini-projects, collaborative work and problem-solving driven by real chemical engineering challenges."
+        }
+      ].map((item, i) => (
+        <Link
+          key={i}
+          href={item.link}
+          className="group block bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-2xl p-10 shadow-lg hover:shadow-2xl hover:-translate-y-1 transition"
+        >
+          <h3 className="text-3xl font-semibold mb-4">
+            {item.title}
+          </h3>
 
-      {/* UPCOMING EVENTS – now only 2–3 */}
-      <section className="py-16 bg-gray-50 dark:bg-slate-900">
-        <div className="max-w-7xl mx-auto px-4">
-
-          <h2 className="text-4xl font-bold mb-12 text-center text-primary dark:text-blue-400">
-            Upcoming Events
-          </h2>
-
-          <div className="grid md:grid-cols-3 gap-8">
-
-            <div className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg border-t-4 border-primary">
-              <div className="bg-gradient-to-r from-primary to-blue-600 text-white p-4 rounded-lg mb-4 font-bold text-lg">
-                🎓 Event
-              </div>
-              <h3 className="text-xl font-bold mb-3">Industry Seminar</h3>
-              <p className="mb-4">Learn about the latest trends in chemical engineering</p>
-              <span className="text-primary dark:text-blue-400 font-semibold">
-                Coming Soon →
-              </span>
-            </div>
-
-            <div className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg border-t-4 border-secondary">
-              <div className="bg-gradient-to-r from-secondary to-yellow-600 text-white p-4 rounded-lg mb-4 font-bold text-lg">
-                🎓 Event
-              </div>
-              <h3 className="text-xl font-bold mb-3">Research Workshop</h3>
-              <p className="mb-4">Hands-on workshop on research methodologies</p>
-              <span className="text-primary dark:text-blue-400 font-semibold">
-                Coming Soon →
-              </span>
-            </div>
-
-            <div className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg border-t-4 border-accent">
-              <div className="bg-gradient-to-r from-accent to-green-600 text-white p-4 rounded-lg mb-4 font-bold text-lg">
-                🎓 Event
-              </div>
-              <h3 className="text-xl font-bold mb-3">Networking Social</h3>
-              <p className="mb-4">Connect with fellow members and professionals</p>
-              <span className="text-primary dark:text-blue-400 font-semibold">
-                Coming Soon →
-              </span>
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-      {/* REGISTER CTA */}
-      <section className="bg-gradient-to-r from-primary to-secondary dark:from-blue-900 dark:to-yellow-900 text-white py-16">
-        <div className="max-w-4xl mx-auto text-center px-4">
-          <h2 className="text-4xl font-bold mb-4">Join CSTR Today</h2>
-
-          <p className="text-xl mb-8">
-            Become part of a vibrant community dedicated to advancing chemical engineering
+          <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
+            {item.text}
           </p>
 
-          <Link
-            href="/support"
-            className="bg-white dark:bg-slate-800 text-primary dark:text-yellow-400 font-bold py-3 px-8 rounded-lg hover:scale-105 hover:shadow-xl transition"
-          >
-            Register Now
-          </Link>
-        </div>
-      </section>
+          <div className="mt-6 h-[2px] w-0 group-hover:w-full transition-all duration-700 bg-gradient-to-r from-blue-400 to-purple-400" />
+        </Link>
+      ))}
+
+    </div>
+  </div>
+</section>
 
     </main>
   )

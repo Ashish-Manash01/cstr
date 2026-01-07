@@ -97,3 +97,94 @@ button {
   animation: pulse-custom 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
+/* Hero radial rings */
+.hero-rings {
+  background: radial-gradient(800px 400px at 50% -20%, rgba(90, 140, 255, 0.15), transparent),
+              radial-gradient(600px 300px at 20% 0%, rgba(50, 80, 200, 0.2), transparent),
+              radial-gradient(800px 500px at 80% 0%, rgba(50, 80, 200, 0.12), transparent);
+}
+
+/* Glow pulse */
+@keyframes glow-pulse {
+  0% { box-shadow: 0 0 20px rgba(80, 140, 255, .3), 0 0 60px rgba(80, 140, 255, .15); }
+  50% { box-shadow: 0 0 35px rgba(80, 140, 255, .6), 0 0 90px rgba(80, 140, 255, .25); }
+  100% { box-shadow: 0 0 20px rgba(80, 140, 255, .3), 0 0 60px rgba(80, 140, 255, .15); }
+}
+
+.logo-glow {
+  animation: glow-pulse 3.5s ease-in-out infinite;
+}
+/* Light-mode background image for hero */
+.hero-light-bg {
+  background-image: url("https://media.licdn.com/dms/image/v2/D4E0BAQGFQWsWKu_tYw/company-logo_200_200/company-logo_200_200/0/1701157978649/department_of_chemical_engineering_nitk_logo?e=1769644800&v=beta&t=Slq8MRm6Ryfd2Hs34GFG3pcjet0PPhwovgkFeIO2aoY");
+  background-size: 600px;
+  filter: saturate(0.9);
+}
+
+/* Make it softer on small screens */
+@media (max-width: 768px) {
+  .hero-light-bg {
+    background-size: 400px;
+  }
+}
+/* circular auto rotation effect */
+.logo-track {
+  animation: rotate-logos 18s linear infinite;
+  width: max-content;
+}
+
+@keyframes rotate-logos {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+/* About image crossfade */
+.about-image {
+  position: relative;
+}
+
+.about-image img {
+  transition: opacity 1.5s ease-in-out, transform 1.5s ease-in-out;
+}
+
+/* Automatic fade loop */
+@keyframes fadeSwap {
+  0%   { opacity: 1; }
+  45%  { opacity: 1; }
+  55%  { opacity: 0; }
+  100% { opacity: 0; }
+}
+
+@keyframes fadeSwapReverse {
+  0%   { opacity: 0; }
+  45%  { opacity: 0; }
+  55%  { opacity: 1; }
+  100% { opacity: 1; }
+}
+
+.about-image .image-one {
+  animation: fadeSwap 10s infinite;
+}
+
+.about-image .image-two {
+  animation: fadeSwapReverse 10s infinite;
+}
+
+/* Hover effect — swap faster when hovered */
+.about-image:hover .image-one {
+  opacity: 0;
+  transform: scale(1.04);
+}
+
+.about-image:hover .image-two {
+  opacity: 1;
+  transform: scale(1.04);
+}
+.wave-path {
+  animation: waveMove 12s ease-in-out infinite alternate;
+}
+
+@keyframes waveMove {
+  0%   { d: path("M0,300 C240,340 480,240 720,280 C960,320 1200,380 1440,340 L1440,0 L0,0 Z"); }
+  50%  { d: path("M0,340 C240,420 480,300 720,340 C960,380 1200,440 1440,400 L1440,0 L0,0 Z"); }
+  100% { d: path("M0,320 C240,380 480,260 720,300 C960,340 1200,420 1440,380 L1440,0 L0,0 Z"); }
+}
