@@ -135,7 +135,7 @@ export default function Events() {
       title: 'Wizardry of Chemical Engineering',
       description: 'Science-based chemical demonstrations.',
       category: 'seminar',
-      image: 'https://images.unsplash.com/photo-1532634922-8fe0b757fb13',
+      image: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655',
     },
   ]
 
